@@ -1,0 +1,19 @@
+{
+  "name": "applok_update",
+  "version": "1.0.0",
+  "description": "Sincroniza banco de dados cliente e servidor ",
+  "main": "app.js",
+  "scripts": {
+    "test": "serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiago-souza-mx/applok_update.git"
+  },
+  "author": "Thiago Souza - DesignerMX",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thiago-souza-mx/applok_update/issues"
+  },
+  "homepage": "https://github.com/thiago-souza-mx/applok_update#readme"
+}
