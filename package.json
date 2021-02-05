@@ -1,19 +1,27 @@
 {
   "name": "applok_update",
   "version": "1.0.0",
-  "description": "Sincroniza banco de dados cliente e servidor ",
-  "main": "app.js",
+  "description": "Database update",
+  "main": "main.js",
   "scripts": {
-    "test": "serve"
+    "start": "set NODE_ENV=test&&electron .",
+    "package-win": "electron-packager .  --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/android-chrome-192x192.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Applok Update\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thiago-souza-mx/applok_update.git"
+  "author": "Thiago Souza",
+  "license": "MIT",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "dotenv": "^8.2.0",
+    "electron-packager": "^15.2.0",
+    "electron-reload": "^1.5.0",
+    "material-icons": "^0.3.1"
   },
-  "author": "Thiago Souza - DesignerMX",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/thiago-souza-mx/applok_update/issues"
+  "devDependencies": {
+    "electron-package": "^0.1.0",
+    "electron": "^10.0.1"
   },
-  "homepage": "https://github.com/thiago-souza-mx/applok_update#readme"
+  "application": {
+    "name_app": "Applok Update",
+    "local": "festah"
+  }
 }
