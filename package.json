@@ -14,7 +14,8 @@
     "dotenv": "^8.2.0",
     "electron-packager": "^15.2.0",
     "electron-reload": "^1.5.0",
-    "material-icons": "^0.3.1"
+    "material-icons": "^0.3.1",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
     "electron-package": "^0.1.0",
