@@ -5,12 +5,20 @@ const ipc = electron.ipcRenderer;
 const RemoteControl = {};
 
 RemoteControl.closeWindow = () => {
-	const config = JSON.parse(localStorage.getItem("config"))
-	if (localStorage.getItem('logon') == null || config.host == "" || config.DAO.host == "" || config.DAO.user == "" || config.DAO.password == "" || config.DAO.database == "")
-		ipc.send('close');
-	else
+	let close = false;
+	const configs = JSON.parse(localStorage.getItem("config"));
+  configs.forEach(config => {  
+    if (config.subdomain == "" || config.DAO.user == "" || config.DAO.password == "" || config.DAO.database == "")
+      close = true
+  });
+	
+//	if (localStorage.getItem('logon') == null )
+	//	ipc.send('close');
+	//else
 		ipc.send('hide')
 }
+
+	
 
 RemoteControl.minWindow = () => {
 	ipc.send('minimize');

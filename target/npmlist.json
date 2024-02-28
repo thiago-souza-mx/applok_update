@@ -1,0 +1,1 @@
+{"version":"1.0.5","name":"applok_update","dependencies":{"child_process":{"version":"1.0.2"},"dotenv":{"version":"8.6.0"},"electron-packager":{"version":"15.2.0"},"electron-reload":{"version":"1.5.0"},"material-icons":{"version":"0.3.1"},"mysql2":{"version":"2.2.5"},"request":{"version":"2.88.2"},"zlib":{"version":"1.0.5"}}}

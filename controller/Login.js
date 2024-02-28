@@ -67,7 +67,10 @@ Login.callToLogin = async function() {
   let logon = await validLogin({ senha: senha, username: username });
   console.log(logon)
   if (logon.success) {
-    window.location.reload()
+    //window.location.reload()
+    document.querySelector('html').classList.add("logado");
+    document.querySelector('#animateCss').setAttribute('href', '')
+    form.reset();
   } else {
     Login.loginMsg(logon.error);
   }
@@ -77,7 +80,9 @@ Login.callToLogin = async function() {
 
 Login.appLogout = () => {
   localStorage.removeItem("logon");
-  window.location.reload();
+  // window.location.reload();
+  document.querySelector('html').classList.remove("logado");
+  document.querySelector('#animateCss').setAttribute('href', './assets/css/animate.css')
 }
 
 // Pega os dados do usuario logado

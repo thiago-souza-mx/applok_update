@@ -1,3 +1,18 @@
+
+const urlGet = (key)=>{
+  let query = location.search.slice(1);
+  let partes = query.split('&');
+  let data = {};
+  partes.forEach(function (parte) {
+      let chaveValor = parte.split('=');
+      let chave = chaveValor[0];
+      let valor = chaveValor[1];
+      data[chave] = valor;
+  })
+
+  return  decodeURI(data[key]);
+}
+
 const SET = ()=>{
   let query = location.search.slice(1);
   let partes = query.split('&');
@@ -23,4 +38,7 @@ const GET = (key)=>{
 
 }
 
-module.exports = GET;
+module.exports =  {
+  urlGet : urlGet,
+  GET : GET
+};

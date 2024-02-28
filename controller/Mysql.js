@@ -1,33 +1,71 @@
+const ModelConfig = require(__dirname + '/../model/Config.model');
+
 // user: festah
 // senha: Uo8uhoBMWxSCyVzo
-const user = "festah"
-const senha = "Uo8uhoBMWxSCyVzo"
-const host = "localhost"
-const porta = "3306"
-const banco = "festahbrasilia"
+const connections = {}
+const dao = {
+  user : "",
+  senha : "",
+  host : "localhost",
+  porta : "3306",
+  banco : ""
+}
 
-
-const connect = async props =>{
-  const dao = {}
-  dao.user  = ( props.user  != "" ) ? props.user  : user
-  dao.senha = ( props.password != "" ) ? props.password : senha
-  dao.host  = ( props.host  != "" ) ? props.host  : host
-  dao.porta = ( props.port != "" ) ? props.port : porta
-  dao.banco = ( props.database != "" ) ? props.database : banco
+const conn = async (props ,database) =>{
+  if(!props)
+    props = ModelConfig.DAO 
   
-  if(global.connection && global.connection.state !== 'disconnected')
-      return global.connection
+  dao.user  = ( props.user      != "" ) ? props.user      : dao.user
+  dao.senha = ( props.password  != "" ) ? props.password  : dao.senha
+  dao.host  = ( props.host      != "" ) ? props.host      : dao.host
+  dao.porta = ( props.port      != "" ) ? props.port      : dao.porta
+  dao.banco = ( props.database  != "" ) ? props.database  : dao.banco
+
+  
+  if( connections && connections[database] && connections[database].state !== 'disconnected')
+      return connections[database]
   try{
     const mysql = require("mysql2/promise")
     const connection = await mysql.createConnection(`mysql://${dao.user}:${dao.senha}@${dao.host}:${dao.porta}/${dao.banco}`);
     console.log("Conectou no MySQL!")
-  
-    global.connection = connection
+    
+    connections[database] = connection
+    console.log(connections)
     return connection
   }catch(err){
     console.log(err)
     return false
   }
+  
 }
 
-module.exports = connect;
+const MySQL = {
+  connect : async (DAO, database) =>{ 
+    return await conn(DAO, database)
+  },
+
+  select : async (process, _query) =>{    
+
+    const conn = await connections[process.subdomain]
+    const [rows] = await conn.query(_query);
+    return rows;
+
+  },
+
+  insert : async (process, _query) =>{    
+
+    const conn = await connections[process.subdomain]
+    const [rows] = await conn.query(_query);
+    return rows;
+  },
+
+  update :async (process, _query) =>{    
+
+    const conn = await connections[process.subdomain]
+    const [rows] = await conn.query(_query);
+    return rows;
+  }
+
+}
+
+module.exports = MySQL;

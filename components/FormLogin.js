@@ -5,8 +5,7 @@ const  Login  = require(__dirname+'/../controller/Login');
 const formLogin = (method)=>{
     let html;
     html=`
-    <link rel="stylesheet" href="./assets/css/animate.css">
-    <div class="msg"></div>
+    <div class="msg login"></div>
     <div class="form">
         <div class="header">
             <!--div class="${method=="register"?"active":""}"><h2>CADASTRO</h2></div-->

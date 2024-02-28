@@ -22,6 +22,17 @@ button:focus {
   outline: none
 }
 
+.d-flex{
+  display:flex;
+}
+
+.justify-content-between{
+  justify-content: space-between;
+}
+.align-items-center{
+  align-items: center;
+}
+
 body {
   font-family: "Arial", sans;
   margin: 0;
@@ -31,7 +42,6 @@ body {
   /* padding: 5px 10px 15px; */
   overflow: hidden;
 }
-
 .maximized body {
   font-family: "Arial", sans;
   margin: 0;
@@ -44,6 +54,22 @@ body {
 
 img {
   max-width: 100%;
+}
+
+.circle{
+  width:10px;
+  height:10px;
+  background:#9f9f9f;
+  display: block;
+  border-radius: 100%;
+  margin:1px;
+}
+
+.c-red{
+  background:#ff3d3d;
+}
+.c-green{
+  background:#4eff00
 }
 
 .toollbar {
@@ -68,14 +94,13 @@ img {
 
 .toollbar div {
   display: flex;
+  flex: 1;
   height: 100%;
-  width: calc(33% - 40px);
   align-items: center;
   justify-content: flex-start;
 }
 
 .toollbar div.buttons {
-  width: calc(33%);
   justify-content: flex-end;
   padding-right: 10px;
 }
@@ -94,17 +119,19 @@ html:not(.logado) .toollbar div.buttons {
 
 .toollbar div.icon {
   width: 40px;
+  height:40px;
   padding: 12px;
 }
-
+.toollbar div.icon img{
+  width:20px
+}
 .toollbar div.apptitle {
-  flex: 1;
+  /* flex: 1; */
   justify-content: center;
 }
 
 html:not(.logado) .toollbar div.apptitle {
   width: initial;
-  padding-left: 70px
 }
 
 .toollbar div ul {
@@ -122,10 +149,24 @@ html:not(.logado) .toollbar div.apptitle {
 .toollbar .buttons ul li.unmax {
   display: none;
 }
-
+.toollbar .menu{
+  display: none;
+}
+.logado .toollbar .menu{
+  display: flex;
+}
 .toollbar .menu ul li {
   font-size: 13px;
 }
+
+.logado .toollbar .icon{
+  display: none;
+}
+
+.logado .toollbar #icon .icon{
+  display: block;
+}
+
 
 .toollbar .buttons ul li,
 .toollbar .menu ul li {
@@ -164,6 +205,12 @@ html:not(.logado) .toollbar div.apptitle {
   z-index: 1000;
   position: absolute;
   top: 0;
+  z-index: 99999999;
+  transform: scale(1);
+  transition: transform 0.4s ;
+}
+.logado #login{
+  transform: scale(0);
 }
 
 #login .msg {
@@ -304,10 +351,12 @@ html:not(.logado) .toollbar div.apptitle {
   flex: 1;
   height: calc(100% - 30px);
   width: 100%;
-  display: flex;
+  opacity: 0;
   flex-direction: column;
 }
-
+.logado #content{
+  opacity: 1;
+}
 #content header {
   padding: 10px;
   background: #ffd900;
@@ -321,30 +370,48 @@ html:not(.logado) .toollbar div.apptitle {
   padding-right: 5px;
 }
 
-#content #main {
-  width: 100%;
-  display: flex;
-  flex: 1;
-  height: calc(100% - 115px);
-  flex-direction: column;
-  background: black;
-}
-
-.maximized #content #main {
-  width: 100%;
-  display: flex;
+#content main{
   flex: 1;
   height: calc(100% - 90px);
-  flex-direction: column;
   background: black;
+  display:flex;
+  flex-direction:row;
+  position:relative;
 }
 
-#content #main #content-event {
+#content main aside{
+  width:30%;
+  background:#232323;
+  max-width:280px;
+  margin:10px;
+  border-radius:20px;
+  overflow-x: hidden;
+}
+#content main #main {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;  
+}
+
+.maximized #content main #main {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column; 
+}
+
+#content main #main #content-event {
   height: 100%;
+}
+
+#content main #main #content-event #event {
+  flex:1
 }
 
 #content footer {
   padding: 10px;
+  position:relative;
   z-index: 99999;
   display: flex;
   flex-direction: row;
@@ -355,34 +422,96 @@ html:not(.logado) .toollbar div.apptitle {
 
 #content footer>div {
   width: 25%;
-  text-align: center
+  text-align: left;
 }
 
-#content footer>div:first-child {
-  width: 25%;
-  text-align: left
-}
 
-#content footer>div:last-child {
-  width: 25%;
-  text-align: right
-}
-
-#content footer #statusConect span,
-#content footer #statusAPI span {
+#content .statusAPI span {
   animation: fa-blink .75s linear infinite;
 }
 
-#statusRequest span:nth-child(1),
-#content footer #statusMysql span {
+.statusRequest span:nth-child(1),
+#content .statusMysql span {
   animation: fa-blink .75s linear infinite;
-  animation-delay: 0.325s;
+  animation-delay: 0.375s;
 }
 
-#statusRequest span:nth-child(2) {
+.statusRequest span:nth-child(2) {
   animation: fa-blink .75s linear infinite;
 }
 
+.timeRequest{
+  font-size: 12px;
+  color: lightskyblue;
+}
+.timeRequest b{
+  min-width: 23px;
+  display: inline-block;
+  text-align: right;
+}
+#content footer #statusConect{
+  display:flex;
+  padding-left:10px;
+  align-items:center;
+}
+#content footer #statusConect span{
+  animation: fa-blink .75s linear infinite;
+  font-size:10px
+}
+#content footer #statusConect span:nth-child(2){
+   animation-delay: 0.375s;
+   padding-right:10px
+}
+
+.on-off{
+  display:flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.on-off span{
+  padding-right:10px;
+}
+.on-off > div{
+  background:#000000;
+  width:50px;
+  height:24px;
+  border-radius:25px;
+  padding:2px;
+  position:relative;
+}
+
+.on-off .chave{
+  background:#5d5d5d;
+  width:20px;
+  height:20px;
+  border-radius:25px;
+  cursor:pointer;
+  position:absolute;
+  transition:0.2s all;
+  right:27px;
+}
+
+.on-off > div.ligado .chave{
+  background:green;
+  right:2px;
+}
+
+.statusRequest,
+.statusMysql,
+.statusAPI {
+  font-size:12px;
+  display:flex;
+  flex-flow:row-reverse;
+  color:#555555
+}
+
+.statusRequest span,
+.statusMysql span,
+.statusAPI span{
+  font-size:10px;
+  margin:0px 2px
+}
 #content .events {
   height: 100%;
   width: 100%;
@@ -397,6 +526,25 @@ html:not(.logado) .toollbar div.apptitle {
   transition: 0.4s all;
 }
 
+#content .events section#loadEvents .event {
+  position: relative;
+  padding: 5px 15px;
+  background: #2b2b2b;
+  margin-bottom: 8px;
+  border-radius: 0 50px 50px 0;
+  display: flex;
+  justify-content: start;
+  transition: opacity 0.3s,
+     margin-left 0.5s,
+     margin-right 0.5s, 
+     margin-bottom 0.6s, 
+     background 10s, 
+     color 10s,
+     border-color 10s;
+  transition-delay: 1s;
+  border-left: 5px solid;
+}
+
 #content .events section#loadEvents .event.new {
   opacity: 0;
   margin-left: -30px;
@@ -404,29 +552,29 @@ html:not(.logado) .toollbar div.apptitle {
   margin-bottom: 15px;
   background: rgb(255 217 0 / 0.3);
   color: #FFF;
-}
+  border-color: green;
 
-#content .events section#loadEvents .event {
-  padding: 5px 15px;
-  background: #2b2b2b;
-  margin-bottom: 8px;
-  border-radius: 50px;
-  display: flex;
-  justify-content: space-between;
-  transition: opacity 0.3s, margin-left 0.5s, margin-right 0.5s, margin-bottom 0.6s, background 10s, color 10s;
-  transition-delay: 1s;
 }
 
 #content .events section#loadEvents .event.motion {
   animation: fa-blink .5s linear 5;
   animation-delay: 1.3s;
+  border-color: green;
 }
 
 #content .events section#loadEvents .event span {
   padding: 5px 15px;
   font-size: 10px;
+  position: absolute;
+  right: 0;
 }
 
+#content .events section#loadEvents .event dd{
+ text-transform:capitalize;
+ color: #bda103;
+ margin: 0 10px 0 0;
+ min-width: 100px;
+}
 
 /***************************************************************
  * CONFIG
@@ -453,6 +601,40 @@ html:not(.logado) .toollbar div.apptitle {
 .configs form {
   display: flex;
   flex-direction: column
+}
+
+#content-config #actions{  
+  display: flex;  
+  justify-content: space-between;  
+  padding: 10px;
+}
+
+#content-config #actions button{  
+  padding: 10px 20px;
+  border-radius:5px;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  opacity:0.8
+}
+
+
+#content-config #actions button:hover{  
+  opacity:1
+}
+
+#content-config #actions button#add-config{  
+  background:green;
+}
+
+#content-config #actions button#delete-config{  
+  background:red;
+}
+
+#content-config #actions button#update-local{  
+  background:#d76402;
+  padding:10px 15px;
+  
 }
 
 .form .header {
@@ -556,6 +738,50 @@ html:not(.logado) .toollbar div.apptitle {
   color: var(--color-font-secondary);
 }
 
+
+/***************************************************************
+ * PROCESS
+ **************************************************************/
+
+#content-process ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+#content-process > ul{
+  margin:20px 10px;
+}
+
+#content-process > ul li.item{
+  padding:10px;
+  background:#000000;
+  border-radius: 0 10px 10px 0;
+  border-left:5px solid #474747;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+#content-process > ul li.item:hover{
+  background:#1a1a1a;
+  border-left:5px solid #d76402;
+}
+
+#content-process > ul li.item.active{
+  background:#1a1a1a;
+  border-left:5px solid #ffd900;
+}
+
+#content-process > ul li.item ul{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+#content-process > ul li.item ul li:first-child{
+  text-transform:capitalize
+}
+
 .hide {
   display: none!important;
 }
@@ -563,14 +789,73 @@ html:not(.logado) .toollbar div.apptitle {
 .show {
   display: flex!important;
 }
+.sinc{
+  font-size:12px;
+  color:#ff3d3d
+}
+.sinc.ok{
+  color:#4eff00
+}
+
+.sinc .load{
+  color:#ffd900;
+  font-size:12px;
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
+}
+
+.sinc .load.hidden{
+  display:none;
+}
+/***************************************************************
+ * MESSAGE
+ **************************************************************/
+ #messages{
+   position:absolute;
+   z-index:999999;
+   display:flex;
+   flex-direction:column;
+   /* width:100%; */
+   right: 0;
+   align-items: flex-end;
+   transition: 0.4s all;
+ }
+.msg:not(.login){
+  background:#383535;
+  position: relative;
+  right: 0;
+  top:0;
+  padding:10px 20px;
+  margin:10px;
+  border-left:5px solid;
+  color:#a8a8a8;
+  animation: slide 5s linear 1;
+  animation-delay: 0.500s;
+  opacity: 0;
+  transition: 0.4s all;
+  box-shadow: 0 2px 6px black;
+  display:
+}
+
+.msg.success{
+  border-color:green;
+}
+
+.msg.error{
+  border-color:red;
+}
 
 .layer {
-  position: fixed;
   width: 100%;
+  position: absolute;
+  flex: 1;
   height: 100%;
-  z-index: 10000;
   background-color: rgb(0 0 0 / 0.8);
   display: flex;
+  z-index:10;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -630,6 +915,40 @@ html:not(.logado) .toollbar div.apptitle {
   }
 }
 
+@keyframes slide {
+  0% {
+    right: -120%;
+    opacity: 0.3;
+  }
+  5% {
+    opacity: 1;
+    right: 0;
+  }
+  90% {
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 ::-webkit-scrollbar-track {
   background-color: #3b3b3b;
 }
@@ -642,27 +961,14 @@ html:not(.logado) .toollbar div.apptitle {
 ::-webkit-scrollbar-thumb {
   background: #ffd03873;
 }
-
-@media(max-width:600px) {
-  .toollbar div.apptitle {
-    width: 20%;
-  }
-  .toollbar div {
-    width: 40%;
-  }
-  .toollbar div.buttons {
-    width: 20%;
+@media(max-width:750px) {
+  #content .events section#loadEvents .event span {
+   display:none
   }
 }
-
-@media(max-width:400px) {
+@media(max-width:550px) {
   .toollbar div.apptitle {
     display: none;
   }
-  .toollbar div {
-    width: 50%;
-  }
-  .toollbar div.buttons {
-    width: 40%;
-  }
+
 }

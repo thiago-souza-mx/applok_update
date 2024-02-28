@@ -10,13 +10,34 @@ const ipc = electron.ipcMain;
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const Info = require('./package.json');
 
+// Menu Template
+
+const menuTemplate = [{
+  label: 'File',
+  submenu: [{
+      label: 'Add item'
+    },
+    {
+      label: 'Clear items'
+    },
+    {
+      label: 'Quit',
+      click() {
+        app.quit();
+      }
+    },
+  ]
+}]
+
 var trayIcon;
 
-/*require("electron-reload")(__dirname, {
-  // Note that the path to electron may vary according to the main file
-  electron: require(`${__dirname}/node_modules/electron`),
-});
-*/
+if (handleSquirrelEvent(app)) {
+  // squirrel event handled and app will exit in 1000ms, so don't do anything else
+  return;
+}
+
+//require("electron-reload")(__dirname, { electron: require(`${__dirname}/node_modules/electron`),});
+
 const App = {
   name: Info.application.name_app,
   local: Info.application.local
@@ -87,6 +108,7 @@ app.on('ready', () => {
   const espera = async() => {
       return new Promise((resolve, reject) => {
         exec("tasklist /svc | findstr /spin \"" + Info.name + ".exe\"", (error, stdout, stderr) => {
+          console.log(this);
           if (error) {
             console.warn(error);
           }
@@ -167,6 +189,14 @@ ipc.on('hide', function(event) {
       }
     },
     {
+      label: 'devtools',
+      click: function() {
+        win.show()
+        win.webContents.toggleDevTools();
+        trayIcon.destroy();
+      }
+    },
+    {
       label: 'Exit',
       click: function() {
         app.quit();
@@ -194,29 +224,68 @@ ipc.on('relaunch', function(event) {
   app.exit()
 })
 
+function handleSquirrelEvent(application) {
+  if (process.argv.length === 1) {
+      return false;
+  }
 
-// Menu Template
+  const ChildProcess = require('child_process');
+  const path = require('path');
 
-const menuTemplate = [{
-  label: 'File',
-  submenu: [{
-      label: 'Add item'
-    },
-    {
-      label: 'Clear items'
-    },
-    {
-      label: 'Quit',
-      click() {
-        app.quit();
-      }
-    },
-  ]
-}]
+  const appFolder = path.resolve(process.execPath, '..');
+  const rootAtomFolder = path.resolve(appFolder, '..');
+  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+  const exeName = path.basename(process.execPath);
+
+  const spawn = function(command, args) {
+      let spawnedProcess, error;
+
+      try {
+          spawnedProcess = ChildProcess.spawn(command, args, {
+              detached: true
+          });
+      } catch (error) {}
+
+      return spawnedProcess;
+  };
+
+  const spawnUpdate = function(args) {
+      return spawn(updateDotExe, args);
+  };
+
+  const squirrelEvent = process.argv[1];
+  switch (squirrelEvent) {
+      case '--squirrel-install':
 
 
-/*let myNotification = new Notification('Foo', {
-  body: `stdout: ${stdout}`
-})
+      case '--squirrel-updated':
+          // Optionally do things such as:
+          // - Add your .exe to the PATH
+          // - Write to the registry for things like file associations and
+          //   explorer context menus
 
-//myNotification.show()*/
+          // Install desktop and start menu shortcuts
+          spawnUpdate(['--createShortcut', exeName]);   
+
+          setTimeout(application.quit, 1000);
+          return true;
+
+      case '--squirrel-uninstall':
+          // Undo anything you did in the --squirrel-install and
+          // --squirrel-updated handlers
+
+          // Remove desktop and start menu shortcuts
+          spawnUpdate(['--removeShortcut', exeName]);
+
+          setTimeout(application.quit, 1000);
+          return true;
+
+      case '--squirrel-obsolete':
+          // This is called on the outgoing version of your app before
+          // we update to the new version - it's the opposite of
+          // --squirrel-updated
+
+          application.quit();
+          return true;
+  }
+};

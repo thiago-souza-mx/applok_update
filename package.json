@@ -1,11 +1,24 @@
 {
   "name": "applok_update",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "Database update",
   "main": "main.js",
+  "user":{
+    "username": "admin@applok",
+    "senha": "root"
+  },
   "scripts": {
     "start": "set NODE_ENV=test&&electron .",
-    "package-win": "electron-packager .  --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/android-chrome-192x192.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Applok Update\""
+    "package-win": "electron-packager .  --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/android-chrome-192x192.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Applok Update\" && node build",
+    "build-installer": "electron-builder"
+  },
+  "build": {
+    "appId": "applok",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
   },
   "author": "Thiago Souza",
   "license": "MIT",
@@ -15,11 +28,16 @@
     "electron-packager": "^15.2.0",
     "electron-reload": "^1.5.0",
     "material-icons": "^0.3.1",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "request": "^2.88.2",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
+    "electron": "^10.3.2",
+    "electron-builder": "^22.9.1",
     "electron-package": "^0.1.0",
-    "electron": "^10.0.1"
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-winstaller": "^4.0.1"
   },
   "application": {
     "name_app": "Applok Update",

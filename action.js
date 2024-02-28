@@ -4,26 +4,56 @@ const toolbar = require(__dirname + '/components/Toolbar');
 const formLogin = require(__dirname + '/components/FormLogin');
 const content = require(__dirname + '/components/Content');
 const Login = require(__dirname + '/controller/Login');
+const fs = require('fs');
+
+const INI = "/applok/config.ini"
+const pathSqlConfig = "/applok/sqlConfig.txt"
+
+fs.readFile( pathSqlConfig ,'utf8', function(err,data){
+	data = data.trim().split("\r\n");
+	let obj = {} 
+	data.forEach(item=>{
+		item = item.split("=>")
+		obj[item[0].trim()] = item[1].trim()
+	})
+	localStorage.setItem("SqlConfig", JSON.stringify(obj))
+});
+
+if( fs.existsSync(INI) ){
+	fs.readFile( INI ,'utf8', function(err,data){
+		data = data.trim().split("\r\n");
+		let obj = {} 
+		data.forEach(item=>{
+			item = item.split("=")
+			obj[item[0].trim()] = item[1].trim()
+		})
+		localStorage.setItem("INI", JSON.stringify(obj))
+	});
+}
+
 const header = {
 	config: `<span class="material-icons">settings</span> Configurações`,
 	event: `<span class="material-icons">reorder</span> Lista de eventos`,
+	content: true
 }
-const config = {
-	subdomain: "",
-	DAO: {
-		host: "",
-		port: "",
-		user: "",
-		password: "",
-		database: ""
-	},
-	interval: ""
-}
-const initConfig = () => {
 
-	if (!localStorage.getItem('config'))
-		localStorage.setItem("config", JSON.stringify(config))
-}
+// Seta preferencia de log
+
+localStorage.setItem("sinc",JSON.stringify({}))
+
+if (!localStorage.getItem('statusSinc'))
+	localStorage.setItem("statusSinc",JSON.stringify({}))
+
+if (!localStorage.getItem('statusLog'))
+	localStorage.setItem("statusLog",0)
+
+
+// Seta objeto de configurações
+
+if (!localStorage.getItem('config'))
+	localStorage.setItem("config", JSON.stringify([]))
+
+
 const initControl = () => {
 	document.querySelector("html").setAttribute("class", "");
 	let ready = () => {
@@ -65,12 +95,18 @@ const initControl = () => {
 			})
 		}
 
+		let refresh = document.getElementById('refresh');
+		if (refresh) {
+			refresh.addEventListener('click', remote.relaunch )
+		}
+
 		let config = document.getElementById('configs');
 		if (config) {
 			config.addEventListener('click', function () {
 				document.getElementById('content-config').classList.add('show');
 				document.getElementById('content-event').classList.remove('show');
 				document.querySelector('#content header').innerHTML = header.config
+				localStorage.setItem("url","configs")
 			})
 		}
 
@@ -80,6 +116,8 @@ const initControl = () => {
 				document.getElementById('content-event').classList.add('show');
 				document.getElementById('content-config').classList.remove('show');
 				document.querySelector('#content header').innerHTML = header.event
+
+				localStorage.setItem("url","events")
 			})
 		}
 
@@ -91,44 +129,26 @@ const initControl = () => {
 			//document.getElementById('btnRegister').addEventListener('click',Login.callToResgister);
 		}
 
-		let contntConfig = document.querySelector("#content-config .form");
-		if (contntConfig) {
-			document.getElementById('btnConfig').addEventListener('click', SetConfigs);
-			//document.getElementById('btnRegister').addEventListener('click',Login.callToResgister);
-		}
-
 		// END FUNCIONS LOGIN
 
 	}
 	document.addEventListener("DOMContentLoaded", ready, false);
 }
 
-const SetConfigs = function () {
-	event.preventDefault();
-	let form = this.closest('form');
-	config.subdomain = form.querySelector('[name=subdomain]').value;
-	config.interval = form.querySelector('[name=interval]').value;
-	config.DAO.host = form.querySelector('[name=host]').value;
-	config.DAO.port = form.querySelector('[name=port]').value;
-	config.DAO.user = form.querySelector('[name=user]').value;
-	config.DAO.password = form.querySelector('[name=password]').value;
-	config.DAO.database = form.querySelector('[name=database]').value;
-	localStorage.setItem("config", JSON.stringify(config))
-	remote.relaunch();
-}
 
-if (Login.getLogon() == null) {
-	toolbar();
+
 	if (UserAction.getStorage('listRegisters'))
 		formLogin('login');
 	else
 		formLogin('register');
 
 	initControl();
-} else {
-	initConfig();
-	document.getElementById('login').remove();
-	initControl();
-	toolbar({ state: 'logado' });
+	if (Login.getLogon() == null) {
+		toolbar();
+	}else{
+		toolbar({ state: 'logado' });
+		document.querySelector('#animateCss').setAttribute('href', '')
+	}
+
 	content(header);
-}
+

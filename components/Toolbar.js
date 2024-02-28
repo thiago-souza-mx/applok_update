@@ -1,4 +1,4 @@
-const APP = require(__dirname + '/../hellpers/GET');
+const Req = require(__dirname + '/../hellpers/GET');
 // TOLLBAR
 
 const toolbar = props => {
@@ -6,17 +6,19 @@ const toolbar = props => {
     div.id = "toolbar";
     div.innerHTML = `
     <div class="toollbar">
-			<div class="icon"><img src="./assets/icons/win/android-chrome-192x192.ico" alt=""></div>
-			${props && props.state == "logado" ? `
+			
+
 				<div class="menu">
 					<ul>
+						<li id="icon"><div class="icon"><img src="./assets/icons/win/android-chrome-192x192.ico" alt=""></div></li>
 						<li id="logout">logout</li>
 						<li id="configs">configs</li>
 						<li id="events">events</li>
+						<li id="refresh">refresh</li>
 					</ul>
 				</div>
-		`: ''}
-		<div class="apptitle">${APP('name')}</div>
+			<div class="icon"><img src="./assets/icons/win/android-chrome-192x192.ico" alt=""></div>
+		<div class="apptitle">${Req.GET('name')}</div>
 		<div class="buttons">
 			<ul>
 				<li class="min">–</li>
